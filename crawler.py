@@ -1,15 +1,17 @@
 import json
 import time
+import sys
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
-URL = 'https://www.yanolja.com/reviews/domestic/10054600?sort=HOST_CHOICE'
+#URL = 'https://www.yanolja.com/reviews/domestic/10054600?sort=HOST_CHOICE'
 
-def crawl_reviews():
+def crawl_reviews(name, url):
     review_list = []
     driver = webdriver.Chrome()
-    driver.get(URL)
+    #driver.get(URL)
+    driver.get(url)
 
     time.sleep(3)
 
@@ -38,9 +40,10 @@ def crawl_reviews():
 
         review_list.append(review_dict)
 
-    with open('/Users/kilminkyu/Desktop/프롬프트 엔지니어링으로 시작하는 LLM 서비스 개발/야놀자 리뷰/res/reviews.json', 'w') as f:
+    with open(f'/Users/kilminkyu/Desktop/프롬프트 엔지니어링으로 시작하는 LLM 서비스 개발/야놀자 리뷰/res/{name}.json', 'w') as f:
         json.dump(review_list, f, indent=4, ensure_ascii=False)
 
 
 if __name__ == '__main__':
-    crawl_reviews()  
+    name,url = sys.argv[1], sys.argv[2]
+    crawl_reviews(name, url)
