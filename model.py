@@ -86,14 +86,14 @@ if assistant B is better, and "[[C]]" for a tie.
         temperature=0.0
     )
 
-    return completion.choices[0].message.content()
+    return completion.choices[0].message.content
 
 # Baseline 모델
 prompt_base = f"""아래 숙소 리뷰에 대해 5문장 내로 요약해줘:"""
 
 def baseline_model(reviews, prompt_base, temperature=0.0, model='gpt-3.5-turbo'):
     # 베이스 프롬프트 + 리뷰를 합침
-    prompt = prompt + '\n\n' + reviews
+    prompt = prompt_base + '\n\n' + reviews
 
     #GPT로 리뷰 요약
     completion = client.chat.completions.create(
@@ -101,7 +101,7 @@ def baseline_model(reviews, prompt_base, temperature=0.0, model='gpt-3.5-turbo')
         messages=[{'role': 'user', 'content': prompt}],
         temperature=temperature
     )
-    return completion.choices[0].message.content()
+    return completion.choices[0].message.content
 
 # 1차 테스트 - 단일 평가
 good_reviews, bad_reviews = preprocess_review(review_list)
@@ -120,11 +120,11 @@ def eval_batch(reviews, baseline, gpt_o1_summary):
     base_count, o1_count, draw_count = 0, 0, 0
     for i in tqdm(range(len(baseline))):
         completion = eval(reviews, baseline[i], gpt_o1_summary)
-        if [[A]] in completion:
+        if '[[A]]' in completion:
             base_count += 1
-        elif [[B]] in completion:
+        elif '[[B]]' in completion:
             o1_count += 1
-        elif [[C]] in completion:
+        elif '[[C]]' in completion:
             draw_count += 1
     return base_count, o1_count, draw_count
 
@@ -141,7 +141,7 @@ prompt_update = f"""당신은 요약 전문가 입니다. 사용자 숙소 리�
     2-2. 나쁜 예시
         a) 좋은 숙소였고 방음도 괜찮았습니다.
         b) 재방문 예정입니다.
-3. 요약 결과는 최소 4문장, 쵀대 7문장 사이로 작성해주세요.
+3. 요약 결과는 최소 4문장, 최대 7문장 사이로 작성해주세요.
 
 아래 숙소 리뷰들에 대해 요약해주세요:"""
 
