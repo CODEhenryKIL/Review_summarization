@@ -96,7 +96,7 @@ def fn(review_name):
 def run_demo():
     demo = gr.Interface(
         fn = fn,
-        inputs = [gr.Radio(['a', 'b'], label = '숙소')],
+        inputs = [gr.Radio(['A', 'B'], label = '숙소')],
         outputs = [gr.Textbox(label = '높은 평점요약'), gr.Textbox(label = '낮은 평점요약')],
     )
     demo.launch()
